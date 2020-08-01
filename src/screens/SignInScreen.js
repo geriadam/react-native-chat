@@ -8,6 +8,7 @@ import Constant from '../const/Constants'
 import EmailTextField from '../components/EmailTextField'
 import PasswordTextField from '../components/PasswordTextField'
 import DismissKeyboard from '../components/DismissKeyboard'
+import firebase from '../firebase/Firebase'
 
 function SignInScreen(){
     const [email, setEmail] = useState('')
@@ -26,6 +27,40 @@ function SignInScreen(){
         const isValidField = Utility.isValidField(password)
         isValidField ? setPasswordError('') : setPasswordError(String.passwordFieldEmpty)
         return isValidField
+    }
+
+    performAuth = () => {
+        const isValidEmail = validateEmailAddress()
+        const isValidPassword = validatePasswordField()
+
+        if(isValidEmail && isValidPassword){
+            setEmailError('')
+            setPasswordError('')
+            registration(email, password)
+        }
+    }
+
+    registration = (email, password) => {
+        try {
+            setIsLoading(true)
+            firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(user => {
+                setIsLoading(false)
+                Alert.alert('Logged In')
+            }).catch((error) => {
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(user => {
+                    setIsLoading(false)
+                    Alert.alert('Created a new user')
+                }).catch((error) => {
+                    setIsLoading(false)
+                    Alert.alert(error.message)
+                })
+            })
+        } catch (error) {
+            setIsLoading(false)
+            Alert.alert(error.message)
+        }
     }
 
     return (
@@ -52,6 +87,8 @@ function SignInScreen(){
                         />
                         <Button
                             title={String.join}
+                            onPress={performAuth}
+                            isLoading={isLoading}
                         />
                     </SafeAreaView>
                 </View>
