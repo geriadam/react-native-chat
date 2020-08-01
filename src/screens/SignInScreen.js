@@ -1,10 +1,17 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
+import String from '../const/String'
+import Button from '../components/Button'
+import EmailTextField from '../components/EmailTextField'
+import PasswordTextField from '../components/PasswordTextField'
 
 function SignInScreen(){
     return (
         <View style={styles.container}>
             <Text>SignIn Screen</Text>
+            <Button title={String.join}></Button>
+            <EmailTextField></EmailTextField>
+            <PasswordTextField></PasswordTextField>
         </View>
     )
 }
